@@ -12,7 +12,7 @@ def main(username, password):
                                        password=password)
         if (conn.is_connected()):
             dump("Dump20181122.sql", conn)
-            time.sleep(1)
+            time.sleep(5)
             selects = Selects.SELECT(username, password)
             selects.select1(username)
             date = datetime.date(2020, 1, 15)
