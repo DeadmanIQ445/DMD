@@ -1,6 +1,8 @@
 import mysql.connector
 from mysql.connector import ProgrammingError, InterfaceError
-
+import Selects
+import datetime
+import time
 
 def main(username, password):
     try:
@@ -9,7 +11,7 @@ def main(username, password):
                                        user=username,
                                        password=password)
         if (conn.is_connected()):
-            dump("Dump20181119.sql", conn)
+            dump("Dump20181122.sql", conn)
     except ProgrammingError:
         print("Something is wrong\nRe-enter user name")
         name = str(input())
@@ -36,3 +38,13 @@ if __name__ == '__main__':
     print("Enter password")
     password = str(input())
     main(username, password)
+    time.sleep(1)
+    selects=Selects.SELECT(username, password)
+    username = 'test111'
+    selects.select1(username)
+    date = datetime.date(2020, 1, 15)
+    selects.select2(date)
+    selects.select3(date)
+    # TODO: в поле ride добавить цену
+    selects.select4(username)
+    selects.select5(date)

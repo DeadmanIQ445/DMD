@@ -5,3 +5,4 @@
 .idea/DMD.iml
 .idea/vcs.xml
 *.meta
+*.pyc
