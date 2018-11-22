@@ -32,13 +32,16 @@ def main(username, password):
 
 
 def dump(filename, connection):
-    file = open(filename, 'r')
-    sql = ' '.join(file.readlines())
-    cursor = connection.cursor(buffered=True)
-    cursor.execute(sql)
-    connection.commit()
-    connection.cursor().close()
-    connection.close()
+    try:
+        file = open(filename, 'r')
+        sql = ' '.join(file.readlines())
+        cursor = connection.cursor(buffered=True)
+        cursor.execute(sql)
+        connection.commit()
+    except InterfaceError:
+        pass
+    #connection.cursor().close()
+    #connection.close()
 
 
 if __name__ == '__main__':
