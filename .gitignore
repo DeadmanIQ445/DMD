@@ -6,3 +6,4 @@
 .idea/vcs.xml
 *.meta
 *.pyc
+.venv/*
