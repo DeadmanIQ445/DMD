@@ -11,7 +11,7 @@ def main(username, password):
                                        user=username,
                                        password=password)
         if (conn.is_connected()):
-            dump("Dump20181122.sql", conn)
+            dump("Dump20181123Data.sql", conn)
             time.sleep(5)
             selects = Selects.SELECT(username, password)
             selects.select1(username)
@@ -21,12 +21,9 @@ def main(username, password):
             # TODO: в поле ride добавить цену
             selects.select4(username)
             selects.select5(date)
-    except ProgrammingError:
-        print("Something is wrong\nRe-enter user name")
-        name = str(input())
-        print("Enter password")
-        passw = str(input())
-        main(name, passw)
+            selects.select6()
+    except ProgrammingError as pe:
+        print(str(pe))
     except InterfaceError:
         pass
 
@@ -46,8 +43,8 @@ def dump(filename, connection):
 
 if __name__ == '__main__':
     print("Enter user name")
-    username = str(input())
+    username = ""
     print("Enter password")
-    password = str(input())
+    password = ""
     main(username, password)
     username = 'test111'

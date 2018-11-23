@@ -48,10 +48,10 @@ class SELECT:
                 print(str(i)+"h-"+str(i+1)+"h:",x[0])
         print()
     def select3(self,date):
-        comm= self.conn.cmd_query_iter("SET @ar=(SELECT COUNT(*)"
-                            "FROM ride"
+        comm= self.conn.cmd_query_iter("SET @ar=(SELECT COUNT(*) "
+                            " FROM ride"
                             " WHERE Date >= '" + str(date)+ "' AND "
-                            "Date <= '" + str(date) + "'+ INTERVAL 1 WEEK);"
+                            " Date <= '" + str(date) + "'+ INTERVAL 1 WEEK);"
                                                       
                             "SET @mr=(SELECT COUNT(*)"
                             "FROM ride"
@@ -111,10 +111,63 @@ class SELECT:
         for x in row:
                 print(decimal.Decimal(x[0]),x[1],"to "+x[2])
         print()
+
+    def select6(self):
+        print("START SELECT 6")
+        timeslots = [
+            ['07:00:00', '10:00:00', 'Morning'],
+            ['12:00:00', '14:00:00', 'Afternoon'],
+            ['17:00:00', '19:00:00', 'Evening'],
+        ]
+        for slot in timeslots:
+            self.cursor.execute(
+                "SELECT OriginPoint, COUNT(*)"
+                " FROM ride"
+                " WHERE TIME_FORMAT(BeginTime, '%H:%i:%s') >= '" + slot[0] + "'"
+                " AND TIME_FORMAT(BeginTime, '%H:%i:%s') < '" + slot[1] + "'"
+                " GROUP BY OriginPoint"
+                " ORDER BY COUNT(*) DESC"
+                " LIMIT 3;"
+            )
+            print(slot[2] + " Pick-up point")
+            row = self.cursor.fetchall()
+            print(row)
+            self.cursor.execute(
+                "SELECT DestinationPoint, COUNT(*)"
+                " FROM ride"
+                " WHERE TIME_FORMAT(BeginTime, '%H:%i:%s') >= '" + slot[0] + "'"
+                " AND TIME_FORMAT(BeginTime, '%H:%i:%s') < '" + slot[1] + "'"
+                " GROUP BY DestinationPoint"
+                " ORDER BY COUNT(*) DESC"
+                " LIMIT 3;"
+            )
+            print(slot[2] + " Destination point")
+            row = self.cursor.fetchall()
+            print(row)
+
+    def select7(self):
+        print("START SELECT 7")
+        self.cursor.execute(
+            "SELECT cid"
+            " FROM (SELECT c.cid, COUNT(r.Date)"
+            " FROM car c"
+            " LEFT OUTER JOIN ride r ON c.CID = r.CID"
+            " WHERE DATE_SUB(DATE_FORMAT(r.Date, '%Y-%m-%d'), INTERVAL -3 MONTH) >= '2018-11-23'"
+            " OR r.Date IS NULL"
+            " GROUP BY c.cid"
+            " ORDER BY COUNT(r.Date)) as crc"
+         )
+        row = self.cursor.fetchall()
+        percentage = int(len(row) / 10)
+        for x in range(percentage):
+            print(row[x])
+
+
+
 if __name__ == '__main__':
     #временно тут стоит main
-    selects = SELECT("root", "170199Dima")
-    username='test111'
+    selects = SELECT("", "")
+    username = 'test111'
     selects.select1(username)
 
     #сделать инпут для второго
@@ -125,3 +178,5 @@ if __name__ == '__main__':
     #TODO: в поле ride добавить цену
     selects.select4(username)
     selects.select5(date)
+    selects.select6()
+    selects.select7()
