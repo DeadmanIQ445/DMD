@@ -137,7 +137,8 @@ DROP TABLE IF EXISTS `location`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `location` (
   `zipcode` int(11) NOT NULL AUTO_INCREMENT,
-  `Address` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Street` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `Building` int(4) DEFAULT NULL,
   `City` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `gps` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`zipcode`),
@@ -151,7 +152,7 @@ CREATE TABLE `location` (
 
 LOCK TABLES `location` WRITE;
 /*!40000 ALTER TABLE `location` DISABLE KEYS */;
-INSERT INTO `location` VALUES (1,'Pushkina 177','Kazan',NULL),(2,'Moskovsky, 188','Kazan',NULL),(3,'Pushkinsky, 125','Kazan',NULL),(4,'Lenina, 290','Kazan',NULL),(5,'Putinskiy, 228','Kazan',NULL),(6,'Velvet, 888','Kazan',NULL);
+INSERT INTO `location` VALUES (1,'Pushkina 177',NULL,'Kazan',NULL),(2,'Moskovsky, 188',NULL,'Kazan',NULL),(3,'Pushkinsky, 125',NULL,'Kazan',NULL),(4,'Lenina, 290',NULL,'Kazan',NULL),(5,'Putinskiy, 228',NULL,'Kazan',NULL),(6,'Velvet, 888',NULL,'Kazan',NULL);
 /*!40000 ALTER TABLE `location` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -422,4 +423,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-23 22:15:13
+-- Dump completed on 2018-11-23 22:18:56
