@@ -402,7 +402,8 @@ CREATE TABLE `wshoplog` (
   `Part` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Date` date NOT NULL,
   `Cost` int(11) DEFAULT NULL,
-  PRIMARY KEY (`WID`,`Part`,`Date`),
+  `Time` time NOT NULL,
+  PRIMARY KEY (`WID`,`Part`,`Date`,`Time`),
   KEY `CID_wshoplog_idx` (`CID`),
   CONSTRAINT `CID_wshoplog` FOREIGN KEY (`CID`) REFERENCES `car` (`cid`),
   CONSTRAINT `WID,Part` FOREIGN KEY (`WID`, `Part`) REFERENCES `wparts` (`wid`, `part`)
@@ -415,7 +416,7 @@ CREATE TABLE `wshoplog` (
 
 LOCK TABLES `wshoplog` WRITE;
 /*!40000 ALTER TABLE `wshoplog` DISABLE KEYS */;
-INSERT INTO `wshoplog` VALUES (1,'AB012','bumper','2022-01-12',300);
+INSERT INTO `wshoplog` VALUES (1,'AB012','bumper','2022-01-12',300,'00:00:00');
 /*!40000 ALTER TABLE `wshoplog` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -428,4 +429,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-25 11:56:09
+-- Dump completed on 2018-11-25 11:58:36
