@@ -22,6 +22,7 @@ def main(username, password):
             selects.select4(username)
             selects.select5(date)
             selects.select6()
+            selects.select7()
     except ProgrammingError as pe:
         print(str(pe))
     except InterfaceError:
@@ -43,8 +44,8 @@ def dump(filename, connection):
 
 if __name__ == '__main__':
     print("Enter user name")
-    username = ""
+    username = "root"
     print("Enter password")
-    password = ""
+    password = "KissMe228"
     main(username, password)
     username = 'test111'

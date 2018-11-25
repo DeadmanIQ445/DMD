@@ -1,7 +1,7 @@
 import decimal
 
 import mysql.connector
-import datetime
+from datetime import datetime
 
 
 class SELECT:
@@ -14,7 +14,7 @@ class SELECT:
 
     def select1(self, name):
         # search for current date
-        date = datetime.date.today()
+        date = datetime.today()
         self.cursor.execute("SELECT c.* FROM ride r INNER JOIN  car c using(CID) "
                             "WHERE c.Color='red'"
                             "AND r.username= '" + str(name) + "'"
@@ -87,8 +87,8 @@ class SELECT:
                 print("No taxis for given date")
         print()
     def select4(self,username):
-        date=datetime.date.today()
-        month = datetime.date.today().month
+        date=datetime.today()
+        month = datetime.today().month
         self.cursor.execute("SELECT CID,DATE FROM ride"
                             " WHERE username = '"+username+"'"
                             " AND (Date>='"+str(date)+"'- INTERVAL 1 MONTH "
@@ -162,16 +162,55 @@ class SELECT:
         for x in range(percentage):
             print(row[x])
 
+    def select8(self, date):
+        print("START SELECT 8")
+        formatted_date = datetime.strptime(date, '%m.%d.%Y')
+        db_date = datetime.strftime(formatted_date, '%Y-%m-%d')
+        self.cursor.execute(
+            "SELECT username, Date"
+            " FROM ride"
+            " WHERE IsToCustomer = 1 AND DATE_SUB(DATE_FORMAT(Date, '%Y-%m-%d'), INTERVAL 1 MONTH) <= '" + db_date + "'"
+            " AND DATE_FORMAT(Date, '%Y-%m-%d') > '" + db_date + "'"
+        )
+        to_customer = self.cursor.fetchall()
+        self.cursor.execute(
+            "SELECT Date"
+            " FROM ride"
+            " WHERE IsToCustomer = 0 AND DATE_SUB(DATE_FORMAT(Date, '%Y-%m-%d'), INTERVAL 1 MONTH) <= '" + db_date + "'"
+            " AND DATE_FORMAT(Date, '%Y-%m-%d') > '" + db_date + "'"
+        )
+        to_charging = self.cursor.fetchall()
+        self.cursor.execute(
+            "SELECT username FROM customer"
+        )
+        users = self.cursor.fetchall()
+        rides_to_charging = []
+        for x in users:
+            i = 0
+            dates = []
+            for r in to_customer:
+                if r[0] == x[0]:
+                    dates.append(r[1])
+            for k in to_charging:
+                if dates.__contains__(k[0]):
+                    i = i + 1
+            rides_to_charging.append(i)
+        for i in range(len(users)):
+            print(str(users[i][0]) + ": " + str(rides_to_charging[i]))
+
+    def select9(self):
+        print("START SELECT 9")
+
 
 
 if __name__ == '__main__':
     #временно тут стоит main
-    selects = SELECT("", "")
+    selects = SELECT("root", "KissMe228")
     username = 'test111'
     selects.select1(username)
 
     #сделать инпут для второго
-    date = datetime.date(2020, 1, 15)
+    date = datetime(2020, 1, 15)
     selects.select2(date)
     selects.select3(date)
 
@@ -180,3 +219,4 @@ if __name__ == '__main__':
     selects.select5(date)
     selects.select6()
     selects.select7()
+    selects.select8("9.10.2018")
