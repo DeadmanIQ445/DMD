@@ -85,8 +85,7 @@ CREATE TABLE `chargingstation` (
   `zipcode` int(11) DEFAULT NULL,
   PRIMARY KEY (`ChID`),
   UNIQUE KEY `ChID_UNIQUE` (`ChID`),
-  UNIQUE KEY `zipcode_UNIQUE` (`zipcode`),
-  CONSTRAINT `zipcode_chstation` FOREIGN KEY (`zipcode`) REFERENCES `location` (`zipcode`)
+  UNIQUE KEY `zipcode_UNIQUE` (`zipcode`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -138,7 +137,7 @@ DROP TABLE IF EXISTS `location`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `location` (
   `zipcode` int(11) NOT NULL AUTO_INCREMENT,
-  `Street` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `Street` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `Building` int(4) DEFAULT NULL,
   `City` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `gps` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -198,8 +197,7 @@ CREATE TABLE `provider` (
   `phoneNumber` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`pid`),
   UNIQUE KEY `pid_UNIQUE` (`pid`),
-  UNIQUE KEY `zipcode_UNIQUE` (`zipcode`),
-  CONSTRAINT `zipcode_provider` FOREIGN KEY (`zipcode`) REFERENCES `location` (`zipcode`)
+  UNIQUE KEY `zipcode_UNIQUE` (`zipcode`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -347,8 +345,7 @@ CREATE TABLE `workshop` (
   `zipcode` int(11) DEFAULT NULL,
   PRIMARY KEY (`WID`),
   UNIQUE KEY `WID_UNIQUE` (`WID`),
-  UNIQUE KEY `zipcode_UNIQUE` (`zipcode`),
-  CONSTRAINT `zipcode` FOREIGN KEY (`zipcode`) REFERENCES `location` (`zipcode`)
+  UNIQUE KEY `zipcode_UNIQUE` (`zipcode`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -400,12 +397,9 @@ CREATE TABLE `wshoplog` (
   `WID` int(11) NOT NULL,
   `CID` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `Part` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `Date` date NOT NULL,
+  `Date` date DEFAULT NULL,
   `Cost` int(11) DEFAULT NULL,
-  `Time` time NOT NULL,
-  PRIMARY KEY (`WID`,`Part`,`Date`,`Time`),
-  KEY `CID_wshoplog_idx` (`CID`),
-  CONSTRAINT `CID_wshoplog` FOREIGN KEY (`CID`) REFERENCES `car` (`cid`),
+  PRIMARY KEY (`WID`,`Part`),
   CONSTRAINT `WID,Part` FOREIGN KEY (`WID`, `Part`) REFERENCES `wparts` (`wid`, `part`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -416,7 +410,7 @@ CREATE TABLE `wshoplog` (
 
 LOCK TABLES `wshoplog` WRITE;
 /*!40000 ALTER TABLE `wshoplog` DISABLE KEYS */;
-INSERT INTO `wshoplog` VALUES (1,'AB012','bumper','2022-01-12',300,'00:00:00');
+INSERT INTO `wshoplog` VALUES (1,'AB012','bumper','2022-01-12',300);
 /*!40000 ALTER TABLE `wshoplog` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -429,4 +423,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-25 11:58:36
+-- Dump completed on 2018-11-25 18:21:24
