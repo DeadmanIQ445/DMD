@@ -167,40 +167,76 @@ class SELECT:
         formatted_date = datetime.strptime(date, '%m.%d.%Y')
         db_date = datetime.strftime(formatted_date, '%Y-%m-%d')
         self.cursor.execute(
-            "SELECT username, Date"
-            " FROM ride"
-            " WHERE IsToCustomer = 1 AND DATE_SUB(DATE_FORMAT(Date, '%Y-%m-%d'), INTERVAL 1 MONTH) <= '" + db_date + "'"
-            " AND DATE_FORMAT(Date, '%Y-%m-%d') > '" + db_date + "'"
+            "SELECT rtc.username, COUNT(*)"
+            " FROM (SELECT DISTINCT username, date, cid"
+            "       FROM ride"
+            "       WHERE IsToCustomer = 1 "
+            "       AND DATE_SUB(DATE_FORMAT(Date, '%Y-%m-%d'), INTERVAL 1 MONTH) <= '" + db_date + "'"
+            "       AND DATE_FORMAT(Date, '%Y-%m-%d') > '" + db_date + "') as rtc, "
+            "       (SELECT date, cid"
+            "       FROM ride"
+            "       WHERE IsToCustomer = 0 AND DATE_SUB(DATE_FORMAT(Date, '%Y-%m-%d'), INTERVAL 1 MONTH) <= '" + db_date + "'"
+            "       AND DATE_FORMAT(Date, '%Y-%m-%d') > '" + db_date + "') as rtcs"
+            " WHERE rtc.date = rtcs.date AND rtc.cid = rtcs.cid"
+            " GROUP BY rtc.username"
+            " ORDER BY COUNT(*)"
         )
-        to_customer = self.cursor.fetchall()
-        self.cursor.execute(
-            "SELECT Date"
-            " FROM ride"
-            " WHERE IsToCustomer = 0 AND DATE_SUB(DATE_FORMAT(Date, '%Y-%m-%d'), INTERVAL 1 MONTH) <= '" + db_date + "'"
-            " AND DATE_FORMAT(Date, '%Y-%m-%d') > '" + db_date + "'"
-        )
-        to_charging = self.cursor.fetchall()
-        self.cursor.execute(
-            "SELECT username FROM customer"
-        )
-        users = self.cursor.fetchall()
-        rides_to_charging = []
-        for x in users:
-            i = 0
-            dates = []
-            for r in to_customer:
-                if r[0] == x[0]:
-                    dates.append(r[1])
-            for k in to_charging:
-                if dates.__contains__(k[0]):
-                    i = i + 1
-            rides_to_charging.append(i)
-        for i in range(len(users)):
-            print(str(users[i][0]) + ": " + str(rides_to_charging[i]))
+        print(self.cursor.fetchall())
 
     def select9(self):
         print("START SELECT 9")
+        self.cursor.execute(
+            "SELECT wid, part, COUNT(*)"
+            " FROM wshoplog"
+            " GROUP BY wid, Part"
+            " ORDER BY COUNT(*) DESC"
+        )
+        res = self.cursor.fetchall()
+        print(res)
 
+    def select10(self):
+        print("START SELECT 10")
+        self.cursor.execute(
+            "SELECT cid, SUM(cost)"
+            " FROM wshoplog"
+            " GROUP BY CID"
+            " ORDER BY SUM(Cost) DESC"
+        )
+        repairs = self.cursor.fetchall()
+        self.cursor.execute(
+            "SELECT cid, sum(cost) as spent"
+            " FROM "
+            " (SELECT cid, ChID, Type"
+            " FROM socketslog) as chlog, "
+            " (SELECT chid, type, Cost"
+            " FROM sockets) as sckts"
+            " WHERE chlog.ChID = sckts.ChID AND chlog.Type = sckts.Type"
+            " GROUP BY CID"
+            " ORDER BY sum(cost) DESC"
+        )
+        charges = self.cursor.fetchall()
+        self.cursor.execute(
+            "SELECT cid FROM car"
+        )
+        cars = self.cursor.fetchall()
+        spent = []
+        for car in cars:
+            spent_for_car = 0
+            for repair in repairs:
+                if car[0] == repair[0]:
+                    spent_for_car += repair[1]
+            for charge in charges:
+                if car[0] == charge[0]:
+                    spent_for_car += charge[1]
+            spent.append(spent_for_car)
+        max_i = 0
+        max_spent = 0
+        print(spent)
+        for i in range(len(spent)):
+            if int(str(spent[i]).split('.')[0]) > max_spent:
+                max_i = i
+                max_spent = int(str(spent[i]).split('.')[0])
+        print(str(cars[max_i][0] + ": " + str(spent[max_i])))
 
 
 if __name__ == '__main__':
@@ -220,3 +256,5 @@ if __name__ == '__main__':
     selects.select6()
     selects.select7()
     selects.select8("9.10.2018")
+    selects.select9()
+    selects.select10()
