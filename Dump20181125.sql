@@ -400,9 +400,11 @@ CREATE TABLE `wshoplog` (
   `WID` int(11) NOT NULL,
   `CID` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `Part` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `Date` date DEFAULT NULL,
+  `Date` date NOT NULL,
   `Cost` int(11) DEFAULT NULL,
-  PRIMARY KEY (`WID`,`Part`),
+  PRIMARY KEY (`WID`,`Part`,`Date`),
+  KEY `CID_wshoplog_idx` (`CID`),
+  CONSTRAINT `CID_wshoplog` FOREIGN KEY (`CID`) REFERENCES `car` (`cid`),
   CONSTRAINT `WID,Part` FOREIGN KEY (`WID`, `Part`) REFERENCES `wparts` (`wid`, `part`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -426,4 +428,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-25 11:52:48
+-- Dump completed on 2018-11-25 11:56:09
