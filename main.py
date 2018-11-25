@@ -24,7 +24,8 @@ def main(username, password):
             selects.select5(date)
             selects.select6()
             selects.select7()
-            date="9.10.2018"
+            #date="9.10.2018"
+            date=datetime.date(2018,9,10)
             selects.select8(date)
             selects.select9()
             selects.select10()
