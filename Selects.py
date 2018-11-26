@@ -28,12 +28,12 @@ class SELECT:
     def select1(self, name):
         print("START SELECT 1")
         # search for current date
-        date = datetime.today()
+        date = datetime.today().date()
         self.cursor.execute("SELECT c.* FROM ride r INNER JOIN  car c using(CID) "
-                            "WHERE c.Color='red'"
+                            "WHERE c.Color='Red'"
                             "AND r.username= '" + str(name) + "'"
                                                               "AND CID LIKE 'AN%'"
-                                                              "AND c.type='car'"
+                                                              "AND c.type='Car'"
                                                               "AND r.Date= '" + str(date) + "'")
         row = self.cursor.fetchall()
         information = ["CID", "Location", "Type", "Charge level", "Plug", "Color"]
