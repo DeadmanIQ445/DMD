@@ -106,7 +106,7 @@ class SELECT:
 
     def select4(self, username):
         print("START SELECT 4")
-        date = datetime.today()
+        date = datetime.today().date()
         month = datetime.today().month
         self.cursor.execute("SELECT CID,DATE FROM ride"
                             " WHERE username = '" + username + "'"
