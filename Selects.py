@@ -10,7 +10,21 @@ class SELECT:
                                             user=user,
                                             password=password)
         self.cursor = self.conn.cursor(buffered=True)
-
+    def show_all_tables(self):
+        self.cursor.execute("SHOW TABLES FROM dmd")
+        tables=self.cursor.fetchall()
+        for i in tables:
+            print("Table: "+str(i[0]))
+            self.cursor.execute("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS "
+                                "WHERE table_name='"+str(i[0])+"'")
+            row = self.cursor.fetchall()
+            print(row)
+            self.cursor.execute("SELECT * FROM "+str(i[0]))
+            row = self.cursor.fetchall()
+            for x in row:
+                print(x)
+            print()
+            self.conn.commit()
     def select1(self, name):
         print("START SELECT 1")
         # search for current date
@@ -24,13 +38,16 @@ class SELECT:
         row = self.cursor.fetchall()
         information = ["CID", "Location", "Type", "Charge level", "Plug", "Color"]
         i = 1
-        for x in row:
-            print("Transport: " + str(i))
-            cur = ""
-            i = i + 1
-            for i in range(0, len(information)):
-                cur += str(information[i] + ": ") + str(x[i]) + "\n"
-            print(cur)
+        if (self.cursor.rowcount == 0):
+            print("No cars")
+        else:
+            for x in row:
+                print("Transport: " + str(i))
+                cur = ""
+                i = i + 1
+                for i in range(0, len(information)):
+                    cur += str(information[i] + ": ") + str(x[i]) + "\n"
+                print(cur)
 
     def select2(self, date):
         print("START SELECT 2")
@@ -94,11 +111,14 @@ class SELECT:
         self.cursor.execute("SELECT CID,DATE FROM ride"
                             " WHERE username = '" + username + "'"
                             " AND (Date>='" + str(date) + "'- INTERVAL 1 MONTH "
-                            "and MONTH(Date)=" + str(month) + ")"
+                            " AND MONTH(Date)=" + str(month) + ")"
                             " AND DATE<='" + str(date) + "'")
         row = self.cursor.fetchall()
-        for x in row:
-            print("Model: " + x[0], ",Date: " + str(x[1]))
+        if (self.cursor.rowcount == 0):
+            print("No cars were busy at this time")
+        else:
+            for x in row:
+                print("Model: " + x[0], ",Date: " + str(x[1]))
         print()
 
     def select5(self, date):
@@ -112,8 +132,11 @@ class SELECT:
                             " AND IsToCustomer='1'"
                             "GROUP BY username;")
         row = self.cursor.fetchall()
-        for x in row:
-            print(decimal.Decimal(x[0]), x[1], "to " + x[2])
+        if (self.cursor.rowcount == 0):
+            print("No rides for given data")
+        else:
+            for x in row:
+                print(decimal.Decimal(x[0]), x[1], "to " + x[2])
         print()
 
     def select6(self):
