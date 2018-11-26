@@ -54,13 +54,12 @@ class SELECT:
         for i in range(24):
             self.cursor.execute("SELECT COUNT(*)"
                                 "FROM socketslog log INNER JOIN sockets sock using(ChID)"
-                                "WHERE (log.Time >='" + str(i) + ":00:00'"
+                                "WHERE log.Date='"+str(date)+"' and ((log.Time >='" + str(i) + ":00:00'"
                                 " AND log.Time <='" + str(i) + ":59:59')"
                                 "or (TIME_FORMAT(log.Time+ INTERVAL sock.TimeToCharge MINUTE,"
                                 "'%H:%i:%s')"
                                 ">'" + str(i) + ":00:00' and "
-                                "log.Time<'" + str(i) + ":59:59')"
-                                "and log.Date='" + str(date) + "'")
+                                "log.Time<'" + str(i) + ":59:59'))")
             row = self.cursor.fetchall()
             for x in row:
                 print(str(i) + "h-" + str(i + 1) + "h:", x[0])
