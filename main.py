@@ -3,7 +3,7 @@ from mysql.connector import ProgrammingError, InterfaceError
 import Selects
 import datetime
 import time
-
+import INSERTS
 def main(username, password):
     try:
         conn = mysql.connector.connect(host='localhost',
@@ -11,7 +11,7 @@ def main(username, password):
                                        user=username,
                                        password=password)
         if (conn.is_connected()):
-            dump("Dump20181125.sql", conn)
+            dump("Dump20181126.sql", conn)
             time.sleep(5)
             selects = Selects.SELECT(username, password)
             name = 'test111'
@@ -24,7 +24,6 @@ def main(username, password):
             selects.select5(date)
             selects.select6()
             selects.select7()
-            #date="9.10.2018"
             date=datetime.date(2018,9,10)
             selects.select8(date)
             selects.select9()

@@ -3,7 +3,6 @@ import decimal
 import mysql.connector
 from datetime import datetime
 
-
 class SELECT:
     def __init__(self, user, password):
         self.conn = mysql.connector.connect(host='localhost',
